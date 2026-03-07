@@ -1,0 +1,7 @@
+# Additional development dependencies (optional)
+black==24.1.1
+flake8==7.0.0
+mypy==1.8.0
+isort==5.13.2
+pre-commit==3.6.0
+locust==2.20.1

@@ -1,0 +1,79 @@
+"""
+Example expected output from PDF processing
+"""
+{
+  "job_id": "550e8400-e29b-41d4-a716-446655440000",
+  "document_id": 1,
+  "success": true,
+  "execution_time_ms": 15420,
+  "stages": {
+    "pdf_analysis": {
+      "success": true,
+      "agent_name": "PDF Analyzer",
+      "execution_time_ms": 4500,
+      "data": {
+        "document_type": "resume",
+        "summary": "Professional resume for a senior software engineer with expertise in backend development, cloud architecture, and AI/ML systems. The candidate has 8+ years of experience and has worked at leading tech companies.",
+        "key_entities": {
+          "names": ["John Doe"],
+          "organizations": ["Google", "Amazon", "Microsoft"],
+          "dates": ["2015-2020", "2020-2023"],
+          "amounts": []
+        },
+        "main_topics": [
+          "Software Engineering",
+          "Backend Development",
+          "Cloud Architecture",
+          "AI/ML Systems",
+          "System Design"
+        ],
+        "action_items": [
+          "Review candidate experience",
+          "Schedule technical interview",
+          "Verify references"
+        ],
+        "sentiment": "positive",
+        "confidence_score": 0.92
+      }
+    },
+    "email_composition": {
+      "success": true,
+      "agent_name": "Email Composer",
+      "execution_time_ms": 3200,
+      "data": {
+        "subject": "Resume Analysis: John Doe - Senior Software Engineer",
+        "body": "Dear Hiring Manager,\n\nI've completed the analysis of the submitted resume for the Senior Software Engineer position.\n\nKey Highlights:\n- Extensive backend development experience (8+ years)\n- Strong expertise in cloud architecture and distributed systems\n- Notable experience at Google, Amazon, and Microsoft\n- AI/ML systems design and implementation\n\nThe candidate demonstrates a strong technical background with relevant experience for this role. I recommend proceeding with a technical interview to assess hands-on skills.\n\nNext Steps:\n1. Review detailed experience\n2. Schedule technical interview\n3. Verify professional references\n\nPlease let me know if you need any additional information or analysis.\n\nBest regards,\nAI Document Analysis System",
+        "tone": "formal",
+        "key_points": [
+          "Strong technical background",
+          "Relevant experience at top companies",
+          "Recommended for interview"
+        ],
+        "call_to_action": "Review and schedule technical interview"
+      }
+    },
+    "email_validation": {
+      "success": true,
+      "ready_to_send": true,
+      "agent_name": "Email Validator",
+      "execution_time_ms": 1200,
+      "data": {
+        "is_valid": true,
+        "validation_passed": true,
+        "issues_found": [],
+        "warnings": [],
+        "recommendations": [
+          "Consider personalizing the greeting with recipient name"
+        ],
+        "risk_level": "low",
+        "ready_to_send": true
+      }
+    },
+    "email_delivery": {
+      "success": true,
+      "message_id": "abc123xyz789",
+      "provider": "sendgrid",
+      "status_code": 202
+    }
+  }
+}
