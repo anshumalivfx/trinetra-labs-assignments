@@ -717,7 +717,7 @@ The video covers:
 
 **Submission to**: himanshu.dixit@trinetralabs.ai
 
-**Repository**: [GitHub URL]
+**Repository**: [[GitHub URL]](https://github.com/anshumalivfx/trinetra-labs-assignments)
 
 ##License
 
