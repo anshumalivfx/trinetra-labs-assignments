@@ -2,6 +2,7 @@
 Email Delivery Agent
 Validates and prepares emails for delivery
 """
+
 from crewai import Agent, Task
 from langchain_mistralai import ChatMistralAI
 from typing import Dict, Any
@@ -15,7 +16,7 @@ logger = get_logger(__name__)
 def create_email_delivery_agent() -> Agent:
     """
     Create Email Delivery Agent
-    
+
     Returns:
         Configured CrewAI Agent
     """
@@ -24,7 +25,7 @@ def create_email_delivery_agent() -> Agent:
         api_key=settings.MISTRAL_API_KEY,
         temperature=0.1,
     )
-    
+
     agent = Agent(
         role="Email Delivery Validator",
         goal="Validate and prepare emails for safe delivery",
@@ -37,21 +38,18 @@ def create_email_delivery_agent() -> Agent:
         allow_delegation=False,
         max_iter=2,
     )
-    
+
     return agent
 
 
-def create_email_validation_task(
-    agent: Agent,
-    email_content: Dict[str, Any]
-) -> Task:
+def create_email_validation_task(agent: Agent, email_content: Dict[str, Any]) -> Task:
     """
     Create email validation task
-    
+
     Args:
         agent: The delivery agent
         email_content: Composed email content
-        
+
     Returns:
         Configured Task
     """
@@ -83,11 +81,11 @@ def create_email_validation_task(
     If the email is ready to send, set ready_to_send to true.
     If there are critical issues, set is_valid to false and explain the issues.
     """
-    
+
     task = Task(
         description=task_description,
         agent=agent,
         expected_output="A structured JSON object containing validation results",
     )
-    
+
     return task

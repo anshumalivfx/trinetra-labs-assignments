@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Document Processing System</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🤖 AI Document Processing System</h1>
+        <p class="subtitle">
+          Upload PDFs for intelligent analysis and automated email generation
+        </p>
+      </header>
+
+      <div class="main-content">
+        <!-- Upload Section -->
+        <section class="card upload-section">
+          <h2>📄 Upload Document</h2>
+          <form id="uploadForm">
+            <div class="form-group">
+              <label for="fileInput">Select PDF File</label>
+              <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept=".pdf" required />
+                <span class="file-name" id="fileName">No file selected</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="recipientEmail">Recipient Email</label>
+              <input
+                type="email"
+                id="recipientEmail"
+                placeholder="recipient@example.com"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="userId">User ID</label>
+              <input type="number" id="userId" value="1" min="1" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="uploadBtn">
+              <span class="btn-text">Upload & Process</span>
+              <span class="btn-loader" style="display: none">
+                <span class="spinner"></span> Processing...
+              </span>
+            </button>
+          </form>
+
+          <div id="uploadStatus" class="status-message"></div>
+        </section>
+
+        <!-- Job Status Section -->
+        <section class="card job-section">
+          <h2>📊 Job Status</h2>
+          <div class="job-lookup">
+            <input
+              type="text"
+              id="jobIdInput"
+              placeholder="Enter Job ID to track status"
+            />
+            <button onclick="checkJobStatus()" class="btn btn-secondary">
+              Check Status
+            </button>
+          </div>
+
+          <div id="jobDetails" class="job-details"></div>
+        </section>
+
+        <!-- Recent Jobs Section -->
+        <section class="card jobs-list-section">
+          <div class="section-header">
+            <h2>📋 Recent Jobs</h2>
+            <button onclick="loadRecentJobs()" class="btn btn-small">
+              🔄 Refresh
+            </button>
+          </div>
+          <div id="recentJobs" class="recent-jobs">
+            <p class="empty-state">
+              No recent jobs yet. Upload a document to get started!
+            </p>
+          </div>
+        </section>
+
+        <!-- System Health -->
+        <section class="card health-section">
+          <h2>💚 System Health</h2>
+          <div id="systemHealth" class="health-status">
+            <button onclick="checkHealth()" class="btn btn-secondary">
+              Check System Health
+            </button>
+            <div id="healthDetails"></div>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <p>Built with FastAPI, AI Agents & Modern Web Technologies</p>
+      </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/static/app.js?v=2"></script>
+  </body>
+</html>

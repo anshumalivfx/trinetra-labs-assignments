@@ -35,8 +35,27 @@ nano .env  # or use your preferred editor
 ```bash
 MISTRAL_API_KEY=your-mistral-api-key-here
 SECRET_KEY=your-secret-key-at-least-32-characters-long
-SENDGRID_API_KEY=your-sendgrid-key  # Optional, can use SMTP instead
+
+# Email Configuration (Choose one)
+
+# Option 1: Gmail SMTP (Recommended for testing)
+EMAIL_PROVIDER=smtp
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-gmail-app-password
+EMAIL_FROM=your-email@gmail.com
+
+# Option 2: SendGrid
+EMAIL_PROVIDER=sendgrid
+SENDGRID_API_KEY=your-sendgrid-key
 ```
+
+**📧 Gmail Setup Instructions:**
+1. Go to [Google App Passwords](https://myaccount.google.com/apppasswords)
+2. Create a new App Password for "Mail"
+3. Copy the 16-character password (format: `xxxx xxxx xxxx xxxx`)
+4. Use it as `SMTP_PASSWORD` in your `.env` file
 
 ### 3. Start Database Services
 

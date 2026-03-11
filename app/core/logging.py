@@ -1,6 +1,7 @@
 """
 Structured Logging Configuration
 """
+
 import logging
 import sys
 import structlog
@@ -11,14 +12,14 @@ from app.core.config import settings
 
 def setup_logging() -> None:
     """Configure structured logging"""
-    
+
     # Configure standard logging
     logging.basicConfig(
         format="%(message)s",
         stream=sys.stdout,
         level=getattr(logging, settings.LOG_LEVEL),
     )
-    
+
     # Configure structlog
     structlog.configure(
         processors=[
@@ -27,9 +28,11 @@ def setup_logging() -> None:
             structlog.processors.StackInfoRenderer(),
             structlog.dev.set_exc_info,
             structlog.processors.TimeStamper(fmt="iso"),
-            structlog.processors.JSONRenderer()
-            if settings.LOG_FORMAT == "json"
-            else structlog.dev.ConsoleRenderer(),
+            (
+                structlog.processors.JSONRenderer()
+                if settings.LOG_FORMAT == "json"
+                else structlog.dev.ConsoleRenderer()
+            ),
         ],
         wrapper_class=structlog.make_filtering_bound_logger(
             getattr(logging, settings.LOG_LEVEL)

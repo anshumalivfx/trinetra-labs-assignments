@@ -231,9 +231,33 @@ celery -A app.tasks.celery_app worker --loglevel=info --concurrency=4
 # Build and start all services
 docker-compose up --build
 
-# Access API at http://localhost:8000
-# Access docs at http://localhost:8000/docs
+# Access the application:
+# - Web Interface: http://localhost:8000/
+# - API: http://localhost:8000/api/v1
+# - API Docs: http://localhost:8000/docs
 ```
+
+### 🖥️ Web Interface
+
+This system includes a modern web interface for easy interaction with the API.
+
+**Access the Web UI**: http://localhost:8000/
+
+**Features**:
+- 📤 **Upload PDFs**: Drag-and-drop interface for document uploads
+- 📊 **Real-time Job Tracking**: Monitor processing status with automatic updates
+- 📋 **Recent Jobs**: Quick access to your last 10 jobs
+- 💚 **System Health**: Check backend service status
+- 📱 **Responsive Design**: Works on desktop, tablet, and mobile
+
+**Quick Start with Web Interface**:
+1. Open http://localhost:8000/ in your browser
+2. Select a PDF file
+3. Enter recipient email address
+4. Click "Upload & Process"
+5. Watch your job being processed in real-time!
+
+For detailed frontend documentation, see [frontend/README.md](frontend/README.md)
 
 ## ⚙️ Configuration
 
@@ -728,4 +752,4 @@ This project is created for the Trinetra Labs Senior Backend Engineering assignm
 - Trinetra Labs for the challenging assignment
 - CrewAI for the multi-agent framework
 - FastAPI for the excellent web framework
-- OpenAI for the language models
+- MistralAI for the language models

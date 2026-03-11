@@ -1,6 +1,7 @@
 """
 Email Schemas
 """
+
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional, Dict, Any
@@ -8,6 +9,7 @@ from typing import Optional, Dict, Any
 
 class EmailBase(BaseModel):
     """Base email schema"""
+
     to_email: EmailStr
     subject: str
     body: str
@@ -15,11 +17,13 @@ class EmailBase(BaseModel):
 
 class EmailCreate(EmailBase):
     """Email creation schema"""
+
     job_id: int
 
 
 class EmailResponse(BaseModel):
     """Email response schema"""
+
     id: int
     job_id: int
     to_email: str
@@ -34,6 +38,6 @@ class EmailResponse(BaseModel):
     retry_count: int
     created_at: datetime
     updated_at: datetime
-    
+
     class Config:
         from_attributes = True

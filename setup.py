@@ -23,46 +23,47 @@ def run_command(cmd, description):
 
 def main():
     """Main setup function"""
-    print("""
+    print(
+        """
     ╔═══════════════════════════════════════════════════════════╗
     ║   AI Agent Orchestration System - Quick Start Script      ║
     ║                                                           ║
     ║   This script will set up and start the application      ║
     ╚═══════════════════════════════════════════════════════════╝
-    """)
-    
+    """
+    )
+
     # Check if .env exists
-    if not os.path.exists('.env'):
+    if not os.path.exists(".env"):
         print("\n⚠️  .env file not found!")
         print("📝 Creating .env from .env.example...")
-        run_command('cp .env.example .env', 'Copy environment template')
+        run_command("cp .env.example .env", "Copy environment template")
         print("\n⚠️  Please edit .env file with your API keys before continuing!")
         print("   Required: MISTRAL_API_KEY, SECRET_KEY, DATABASE_URL")
         response = input("\nHave you configured the .env file? (y/n): ")
-        if response.lower() != 'y':
+        if response.lower() != "y":
             print("Please configure .env and run this script again.")
             sys.exit(0)
-    
+
     # Start dependencies with Docker Compose
     print("\n🐳 Starting PostgreSQL and Redis...")
-    run_command(
-        'docker-compose up -d postgres redis',
-        'Start database services'
-    )
-    
+    run_command("docker-compose up -d postgres redis", "Start database services")
+
     # Wait for services to be ready
     print("\n⏳ Waiting for services to be ready...")
     import time
+
     time.sleep(5)
-    
+
     # Initialize database
     print("\n🗄️  Initializing database...")
     run_command(
         'python3 -c "from app.core.database import init_db; init_db()"',
-        'Initialize database tables'
+        "Initialize database tables",
     )
-    
-    print("""
+
+    print(
+        """
     
     ✅ Setup complete!
     
@@ -80,7 +81,8 @@ def main():
     
     🔍 Health check:
         curl http://localhost:8000/health
-    """)
+    """
+    )
 
 
 if __name__ == "__main__":

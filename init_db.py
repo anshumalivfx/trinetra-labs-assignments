@@ -13,7 +13,7 @@ def create_test_user():
     """Create a test user in the database"""
     print("🔧 Initializing database...")
     init_db()
-    
+
     db = SessionLocal()
     try:
         # Check if user exists
@@ -23,24 +23,24 @@ def create_test_user():
             print(f"   ID: {existing_user.id}")
             print(f"   Email: {existing_user.email}")
             return
-        
+
         # Create test user
         test_user = User(
             email="test@example.com",
             full_name="Test User",
-            hashed_password=pwd_context.hash("testpassword123"),
+            hashed_password=pwd_context.hash("test123"),
             is_active=True,
         )
-        
+
         db.add(test_user)
         db.commit()
         db.refresh(test_user)
-        
+
         print("✅ Test user created successfully!")
         print(f"   ID: {test_user.id}")
         print(f"   Email: {test_user.email}")
         print(f"   Name: {test_user.full_name}")
-        
+
     except Exception as e:
         print(f"❌ Error creating test user: {e}")
         db.rollback()

@@ -1,6 +1,7 @@
 """
 Document Upload and Management Routes
 """
+
 import uuid
 import hashlib
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Form
@@ -29,7 +30,7 @@ async def upload_document(
 ):
     """
     Upload a PDF document for processing
-    
+
     This endpoint:
     1. Validates the uploaded PDF
     2. Saves it to disk
@@ -43,11 +44,11 @@ async def upload_document(
         content_type=file.content_type,
         user_id=user_id,
     )
-    
+
     try:
         # Read file content
         file_content = await file.read()
-        
+
         # Validate PDF
         try:
             validation_result = await PDFService.validate_pdf(
@@ -55,20 +56,20 @@ async def upload_document(
             )
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
-        
+
         # Save file
         file_info = await PDFService.save_file(file_content, file.filename)
-        
+
         # Extract metadata
         metadata = await PDFService.extract_metadata(file_info["file_path"])
-        
+
         # Check for duplicate (by checksum)
         existing_doc = (
             db.query(Document)
             .filter(Document.checksum == file_info["checksum"])
             .first()
         )
-        
+
         if existing_doc:
             logger.warning(
                 "duplicate_document_detected",
@@ -76,7 +77,7 @@ async def upload_document(
                 existing_id=existing_doc.id,
             )
             # Still process it but log the duplicate
-        
+
         # Create document record
         document = Document(
             user_id=user_id,
@@ -91,11 +92,11 @@ async def upload_document(
             author=metadata.get("author"),
             is_processed=False,
         )
-        
+
         db.add(document)
         db.commit()
         db.refresh(document)
-        
+
         # Create job
         job_id = str(uuid.uuid4())
         job = Job(
@@ -104,11 +105,11 @@ async def upload_document(
             document_id=document.id,
             status=JobStatus.PENDING.value,
         )
-        
+
         db.add(job)
         db.commit()
         db.refresh(job)
-        
+
         # Trigger background processing
         process_document_task.delay(
             job_id=job_id,
@@ -116,20 +117,20 @@ async def upload_document(
             user_id=user_id,
             recipient_email=recipient_email,
         )
-        
+
         logger.info(
             "document_upload_completed",
             document_id=document.id,
             job_id=job_id,
             file_size=document.file_size,
         )
-        
+
         return DocumentUploadResponse(
             document=document,
             job_id=job_id,
             message="Document uploaded successfully. Processing in background.",
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -152,10 +153,10 @@ async def get_document(
 ):
     """Get document by ID"""
     document = db.query(Document).filter(Document.id == document_id).first()
-    
+
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
-    
+
     return document
 
 
@@ -175,5 +176,5 @@ async def list_documents(
         .limit(limit)
         .all()
     )
-    
+
     return documents

@@ -1,6 +1,7 @@
 """
 Health Check and System Routes
 """
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -19,7 +20,7 @@ async def health_check(
 ):
     """
     Health check endpoint
-    
+
     Checks:
     - API status
     - Database connectivity
@@ -32,7 +33,7 @@ async def health_check(
         "environment": settings.ENVIRONMENT,
         "checks": {},
     }
-    
+
     # Check database
     try:
         db.execute(text("SELECT 1"))
@@ -40,7 +41,7 @@ async def health_check(
     except Exception as e:
         health_status["status"] = "unhealthy"
         health_status["checks"]["database"] = f"unhealthy: {str(e)}"
-    
+
     # Check Redis
     try:
         redis_client = await get_redis()
@@ -49,7 +50,7 @@ async def health_check(
     except Exception as e:
         health_status["status"] = "unhealthy"
         health_status["checks"]["redis"] = f"unhealthy: {str(e)}"
-    
+
     return health_status
 
 

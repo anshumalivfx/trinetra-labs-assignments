@@ -1,6 +1,7 @@
 """
 Sample Test File
 """
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -11,7 +12,9 @@ from app.core.database import Base, get_db
 
 # Test database
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -55,7 +58,7 @@ def test_upload_invalid_file(test_db):
     """Test upload with invalid file type"""
     files = {"file": ("test.txt", b"not a pdf", "text/plain")}
     data = {"recipient_email": "test@example.com", "user_id": 1}
-    
+
     response = client.post("/api/v1/documents/upload", files=files, data=data)
     assert response.status_code == 400
 

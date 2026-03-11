@@ -2,9 +2,12 @@
 PDF Analyzer Agent
 Extracts and structures document data
 """
+
 from crewai import Agent, Task
 from langchain_mistralai import ChatMistralAI
-from typing import Dict, Any
+from typing import Dict, Any, Optional, List
+from langchain_core.callbacks import CallbackManagerForLLMRun
+from langchain_core.messages import BaseMessage
 
 from app.core.config import settings
 from app.core.logging import get_logger
@@ -12,19 +15,35 @@ from app.core.logging import get_logger
 logger = get_logger(__name__)
 
 
+class MistralAIWrapper(ChatMistralAI):
+    """Wrapper to filter out unsupported parameters for older Mistral API versions"""
+
+    def _generate(
+        self,
+        messages: List[BaseMessage],
+        stop: Optional[List[str]] = None,
+        run_manager: Optional[CallbackManagerForLLMRun] = None,
+        **kwargs: Any,
+    ) -> Any:
+        """Override to remove stop parameter"""
+        # Remove stop from kwargs as mistralai 0.0.8 doesn't support it
+        kwargs.pop("stop", None)
+        return super()._generate(messages, stop=None, run_manager=run_manager, **kwargs)
+
+
 def create_pdf_analyzer_agent() -> Agent:
     """
     Create PDF Analyzer Agent
-    
+
     Returns:
         Configured CrewAI Agent
     """
-    llm = ChatMistralAI(
+    llm = MistralAIWrapper(
         model=settings.MISTRAL_MODEL,
-        api_key=settings.MISTRAL_API_KEY,
+        mistral_api_key=settings.MISTRAL_API_KEY,
         temperature=0.3,
     )
-    
+
     agent = Agent(
         role="PDF Document Analyzer",
         goal="Extract and structure key information from PDF documents",
@@ -35,23 +54,20 @@ def create_pdf_analyzer_agent() -> Agent:
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=3,
+        max_iter=5,
     )
-    
+
     return agent
 
 
-def create_pdf_analysis_task(
-    agent: Agent,
-    pdf_content: Dict[str, Any]
-) -> Task:
+def create_pdf_analysis_task(agent: Agent, pdf_content: Dict[str, Any]) -> Task:
     """
     Create PDF analysis task
-    
+
     Args:
         agent: The analyzer agent
         pdf_content: Extracted PDF content
-        
+
     Returns:
         Configured Task
     """
@@ -59,7 +75,7 @@ def create_pdf_analysis_task(
     page_count = len(pdf_content.get("pages", []))
     tables = pdf_content.get("tables", [])
     entities = pdf_content.get("entities", [])
-    
+
     task_description = f"""
     Analyze the following PDF document and extract structured information:
     
@@ -94,11 +110,11 @@ def create_pdf_analysis_task(
         "confidence_score": 0.0-1.0
     }}
     """
-    
+
     task = Task(
         description=task_description,
         agent=agent,
         expected_output="A structured JSON object containing document analysis",
     )
-    
+
     return task

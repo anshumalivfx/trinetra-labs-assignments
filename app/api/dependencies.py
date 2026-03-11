@@ -1,4 +1,5 @@
 """API Dependencies"""
+
 from typing import Generator
 from sqlalchemy.orm import Session
 

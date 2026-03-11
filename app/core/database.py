@@ -1,6 +1,7 @@
 """
 Database Configuration and Session Management
 """
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
@@ -33,7 +34,7 @@ Base = declarative_base()
 def get_db() -> Generator[Session, None, None]:
     """
     Database dependency for FastAPI routes
-    
+
     Yields:
         Database session
     """
@@ -48,7 +49,7 @@ def get_db() -> Generator[Session, None, None]:
 def get_db_context():
     """
     Context manager for database session
-    
+
     Usage:
         with get_db_context() as db:
             # Use db session

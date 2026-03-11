@@ -1,6 +1,7 @@
 """
 Job Status and Management Routes
 """
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -24,7 +25,7 @@ async def get_job(
 ):
     """
     Get job status and details
-    
+
     Returns complete job information including:
     - Current status
     - Execution time
@@ -33,10 +34,10 @@ async def get_job(
     - Execution logs
     """
     job = db.query(Job).filter(Job.job_id == job_id).first()
-    
+
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     # Get related data
     agent_outputs = db.query(AgentOutput).filter(AgentOutput.job_id == job.id).all()
     email_records = db.query(EmailRecord).filter(EmailRecord.job_id == job.id).all()
@@ -46,7 +47,7 @@ async def get_job(
         .order_by(ExecutionLog.created_at)
         .all()
     )
-    
+
     # Convert to dict for response
     job_dict = {
         "id": job.id,
@@ -88,13 +89,13 @@ async def get_job(
                 "level": el.level,
                 "step": el.step,
                 "message": el.message,
-                "metadata": el.metadata,
+                "metadata": el.log_metadata,
                 "created_at": el.created_at,
             }
             for el in execution_logs
         ],
     }
-    
+
     return job_dict
 
 
@@ -105,14 +106,14 @@ async def get_job_status(
 ):
     """
     Get quick job status
-    
+
     Lightweight endpoint for polling job status
     """
     job = db.query(Job).filter(Job.job_id == job_id).first()
-    
+
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
-    
+
     # Calculate progress percentage
     progress = None
     if job.status == "PENDING":
@@ -121,7 +122,7 @@ async def get_job_status(
         progress = 50
     elif job.status in ["COMPLETED", "FAILED"]:
         progress = 100
-    
+
     message = None
     if job.status == "PENDING":
         message = "Job is queued for processing"
@@ -131,7 +132,7 @@ async def get_job_status(
         message = "Job completed successfully"
     elif job.status == "FAILED":
         message = f"Job failed: {job.error_message}"
-    
+
     return JobStatusResponse(
         job_id=job.job_id,
         status=job.status,
@@ -151,25 +152,19 @@ async def list_jobs(
 ):
     """
     List jobs with optional filters
-    
+
     Filters:
     - user_id: Filter by user
     - status: Filter by job status
     """
     query = db.query(Job)
-    
+
     if user_id:
         query = query.filter(Job.user_id == user_id)
-    
+
     if status:
         query = query.filter(Job.status == status)
-    
-    jobs = (
-        query
-        .order_by(Job.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-        .all()
-    )
-    
+
+    jobs = query.order_by(Job.created_at.desc()).offset(skip).limit(limit).all()
+
     return jobs
